@@ -19,8 +19,15 @@ def show_all():
     c.execute("SELECT rowid, * FROM todolist")
     items = c.fetchall()
 
+    print(f"{'ID':<5} {'Note'}")
+    print("-" * 40)
+
+    if not items:
+        print("No notes found.")
+        return
+
     for item in items:
-        print(item)
+        print(f"{item[0]:<5} {item[1]}")
 
     conn.commit()
 
@@ -32,6 +39,28 @@ def add_one(name):
     c = conn.cursor()
 
     c.execute("INSERT INTO todolist VALUES (?)", ([name]))
+
+    conn.commit()
+
+    conn.close()
+
+
+def delete_one(id):
+    conn = sqlite3.connect("todoapp.db")
+    c = conn.cursor()
+
+    c.execute("DELETE from todolist WHERE rowid = (?)", (id,))
+
+    conn.commit()
+
+    conn.close()
+
+
+def delete_all():
+    conn = sqlite3.connect("todoapp.db")
+    c = conn.cursor()
+
+    c.execute("DELETE FROM todolist")
 
     conn.commit()
 
